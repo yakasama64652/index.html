@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAVA Search</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Top Navigation Simulation */
+        header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 20px;
+            gap: 15px;
+            font-size: 13px;
+        }
+
+        header a {
+            text-decoration: none;
+            color: rgba(0,0,0,0.87);
+        }
+
+        header a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Search Section */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 100px; /* Shifts search bar slightly up */
+        }
+
+        .logo {
+            width: 400px; /* Adjusted for the LAVA horizontal logo */
+            max-width: 90%;
+            margin-bottom: 30px;
+        }
+
+        .search-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-bar-wrapper {
+            display: flex;
+            align-items: center;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            width: 584px;
+            max-width: 90%;
+            padding: 5px 15px;
+            transition: box-shadow 0.2s;
+        }
+
+        .search-bar-wrapper:hover, .search-bar-wrapper:focus-within {
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+            border-color: rgba(223,225,229,0);
+        }
+
+        .search-bar-wrapper input {
+            border: none;
+            outline: none;
+            height: 34px;
+            font-size: 16px;
+            flex-grow: 1;
+            padding: 0 10px;
+        }
+
+        .buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            background-color: #f8f9fa;
+            border: 1px solid #f8f9fa;
+            border-radius: 4px;
+            color: #3c4043;
+            font-size: 14px;
+            padding: 0 16px;
+            line-height: 36px;
+            min-width: 54px;
+            cursor: pointer;
+            transition: border 0.1s, box-shadow 0.1s;
+        }
+
+        .btn:hover {
+            border: 1px solid #dadce0;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            color: #202124;
+        }
+
+        /* Footer Simulation */
+        footer {
+            background: #f2f2f2;
+            color: #70757a;
+            font-size: 14px;
+        }
+
+        .footer-top {
+            padding: 15px 30px;
+            border-bottom: 1px solid #dadce0;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 30px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#">LAVA Mail</a>
+        <a href="#">Images</a>
+        <div style="background: #5f6368; width: 32px; height: 32px; border-radius: 50%;"></div>
+    </header>
+
+    <main>
+        <img src="https://i.ibb.co/3yxmR6rG/image-bae7e9.png" alt="LAVA Automation" class="logo">
+
+        <div class="search-container">
+            <div class="search-bar-wrapper">
+                <svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="#9aa0a6"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
+                <input type="text" autofocus>
+                <svg focusable="false" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="m12 15c1.66 0 3-1.34 3-3v-4c0-1.66-1.34-3-3-3s-3 1.34-3 3v4c0 1.66 1.34 3 3 3z" fill="#4285f4"></path><path d="m11 18.92v2.08h2v-2.08c2.84-.45 5-2.9 5-5.92h-2c0 2.21-1.79 4-4 4s-4-1.79-4-4h-2c0 3.02 2.16 5.47 5 5.92z" fill="#34a853"></path><path d="m7 10h2v4h-2z" fill="#fbbc05"></path><path d="m15 10h2v4h-2z" fill="#ea4335"></path></svg>
+            </div>
+            <div class="buttons">
+                <button class="btn">LAVA Search</button>
+                <button class="btn">I'm Feeling Productive</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-top">Australia</div>
+        <div class="footer-bottom">
+            <div class="footer-links">
+                <span>About</span>
+                <span>Advertising</span>
+                <span>Business</span>
+                <span>How Automation Works</span>
+            </div>
+            <div class="footer-links">
+                <span>Privacy</span>
+                <span>Terms</span>
+                <span>Settings</span>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
