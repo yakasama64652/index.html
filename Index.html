@@ -14,15 +14,29 @@
             height: 100vh;
         }
 
-        header {
+        /* Nav container to hold both Left and Right links */
+        nav {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
+            align-items: center;
             padding: 15px 20px;
-            gap: 15px;
-            font-size: 13px;
         }
 
-        header a { text-decoration: none; color: rgba(0,0,0,0.87); }
+        .nav-left, .nav-right {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            align-items: center;
+        }
+
+        nav a { 
+            text-decoration: none; 
+            color: rgba(0,0,0,0.87); 
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
 
         main {
             flex-grow: 1;
@@ -38,7 +52,6 @@
             padding-top: 20px;
         }
 
-        /* Added cursor pointer to the logo link */
         .logo-link {
             text-decoration: none;
             cursor: pointer;
@@ -128,11 +141,16 @@
 </head>
 <body>
 
-    <header>
-        <a href="#">LAVA Mail</a>
-        <a href="#">Images</a>
-        <div style="background: #5f6368; width: 32px; height: 32px; border-radius: 50%;"></div>
-    </header>
+    <nav>
+        <div class="nav-left">
+            <a href="#" id="home-link">Home</a>
+        </div>
+        <div class="nav-right">
+            <a href="#">LAVA Mail</a>
+            <a href="#">Images</a>
+            <div style="background: #5f6368; width: 32px; height: 32px; border-radius: 50%;"></div>
+        </div>
+    </nav>
 
     <main id="main-content">
         <a href="#" class="logo-link" id="home-trigger">
@@ -176,7 +194,8 @@
         const resultsArea = document.getElementById('results-area');
         const mainContent = document.getElementById('main-content');
         const buttonRow = document.getElementById('button-row');
-        const homeTrigger = document.getElementById('home-trigger');
+        const homeTrigger = document.getElementById('home-trigger'); // The Logo
+        const homeLink = document.getElementById('home-link');       // The new "Home" text
 
         function performSearch() {
             const query = searchInput.value.toLowerCase().trim();
@@ -193,17 +212,22 @@
             }
         }
 
-        // Function to reset everything back to the "Home" state
         function resetToHome() {
             mainContent.classList.remove('searching');
             buttonRow.style.display = "flex";
             resultsArea.style.display = "none";
-            searchInput.value = ""; // Clear the search bar
+            searchInput.value = ""; 
         }
 
-        // Listener for the LAVA Logo click
+        // Home trigger (Logo)
         homeTrigger.addEventListener('click', function(e) {
-            e.preventDefault(); // Stop page from refreshing
+            e.preventDefault();
+            resetToHome();
+        });
+
+        // New Home link (Top Left)
+        homeLink.addEventListener('click', function(e) {
+            e.preventDefault();
             resetToHome();
         });
 
