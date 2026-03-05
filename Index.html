@@ -181,16 +181,22 @@
     <script>
         const database = [
             {
-                keywords: ["success", "customer success team", "support", "netlify"],
-                url: "https://customersuccessteam.netlify.app/",
-                title: "Customer Success Team Portal",
-                description: "Access resources, documentation, and support tools managed by the LAVA Customer Success Team."
+                keywords: ["hubstaff", "time tracking", "productivity", "payroll", "work"],
+                url: "https://hubstaff.com/",
+                title: "Hubstaff - Time Tracking and Productivity Software",
+                description: "The all-in-one work management platform that offers time tracking, proof of work, and payroll for remote, hybrid, and field teams."
             },
             {
                 keywords: ["lava university", "learn", "training", "education"],
                 url: "https://university.lavaautomation.com",
                 title: "Lava University - Learn Automation",
                 description: "The official training platform for LAVA Automation experts. Master workflows and productivity tools."
+            },
+            {
+                keywords: ["lava automation", "home", "main site", "company"],
+                url: "https://www.lavaautomation.com",
+                title: "LAVA Automation | Streamline Your Business",
+                description: "Innovative automation solutions to help your business grow faster and smarter."
             }
         ];
 
@@ -208,7 +214,6 @@
             buttonRow.style.display = "none";
             resultsArea.style.display = "block";
 
-            // FIXED LOGIC: Check if any keyword CONTAINS the query
             const matchedResults = database.filter(item => {
                 const matchesKeyword = item.keywords.some(key => key.includes(query));
                 const matchesTitle = item.title.toLowerCase().includes(query);
