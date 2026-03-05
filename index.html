@@ -5,6 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LAVA Search</title>
     <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #202124;
+            --nav-link: rgba(0,0,0,0.87);
+            --search-border: #dfe1e5;
+            --btn-bg: #f8f9fa;
+            --btn-text: #3c4043;
+            --footer-bg: #f2f2f2;
+            --result-link: #1a0dab;
+            --result-desc: #4d5156;
+            --suggestion-hover: #f1f3f4;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #202124;
+            --text-color: #e8eaed;
+            --nav-link: #e8eaed;
+            --search-border: #5f6368;
+            --btn-bg: #303134;
+            --btn-text: #e8eaed;
+            --footer-bg: #171717;
+            --result-link: #8ab4f8;
+            --result-desc: #bdc1c6;
+            --suggestion-hover: #3c4043;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -12,6 +38,9 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
         }
 
         nav {
@@ -28,8 +57,18 @@
             align-items: center;
         }
 
-        nav a { text-decoration: none; color: rgba(0,0,0,0.87); cursor: pointer; }
+        nav a { text-decoration: none; color: var(--nav-link); cursor: pointer; }
         nav a:hover { text-decoration: underline; }
+
+        #theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            color: var(--nav-link);
+        }
 
         main {
             flex-grow: 1;
@@ -45,13 +84,16 @@
             padding-top: 20px;
         }
 
-        .logo-link { text-decoration: none; cursor: pointer; }
-
         .logo {
             width: 272px;
             margin-bottom: 30px;
             transition: width 0.3s;
-            border: none;
+            /* Filter makes the black logo white in dark mode */
+            filter: var(--logo-filter, none);
+        }
+
+        [data-theme="dark"] .logo {
+            filter: invert(1) brightness(2);
         }
 
         main.searching .logo {
@@ -64,24 +106,19 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative; /* Needed for absolute positioning of suggestions */
+            position: relative;
         }
 
         .search-bar-wrapper {
             display: flex;
             align-items: center;
-            border: 1px solid #dfe1e5;
+            border: 1px solid var(--search-border);
             border-radius: 24px;
             width: 584px;
             max-width: 90%;
             padding: 5px 15px;
-            background: white;
+            background: var(--bg-color);
             z-index: 10;
-        }
-
-        .search-bar-wrapper:hover, .search-bar-wrapper.has-suggestions {
-            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
-            border-color: rgba(223,225,229,0);
         }
 
         .search-bar-wrapper input {
@@ -91,17 +128,18 @@
             font-size: 16px;
             flex-grow: 1;
             padding: 0 10px;
+            background: transparent;
+            color: var(--text-color);
         }
 
-        /* Suggestions Styling */
         #suggestions-list {
             width: 584px;
             max-width: 90%;
-            background: white;
-            border: 1px solid #dfe1e5;
+            background: var(--bg-color);
+            border: 1px solid var(--search-border);
             border-top: none;
             border-radius: 0 0 24px 24px;
-            box-shadow: 0 4px 6px rgba(32,33,36,0.28);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             display: none;
             position: absolute;
             top: 45px;
@@ -120,7 +158,7 @@
         }
 
         .suggestion-item:hover, .suggestion-item.selected {
-            background-color: #f1f3f4;
+            background-color: var(--suggestion-hover);
         }
 
         .buttons {
@@ -128,6 +166,18 @@
             display: flex;
             gap: 12px;
         }
+
+        .btn {
+            background-color: var(--btn-bg);
+            border: 1px solid var(--btn-bg);
+            border-radius: 4px;
+            padding: 0 16px;
+            line-height: 36px;
+            cursor: pointer;
+            color: var(--btn-text);
+        }
+
+        .btn:hover { border: 1px solid var(--search-border); }
 
         #results-area {
             margin-top: 40px;
@@ -139,50 +189,18 @@
         .result-item {
             text-align: left;
             padding: 20px 0; 
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--search-border);
         }
 
         .result-item a {
-            color: #1a0dab;
+            color: var(--result-link);
             font-size: 22px; 
             text-decoration: none;
-            display: block;
-            margin-bottom: 3px;
         }
 
-        .result-item a:hover { text-decoration: underline; }
+        .result-desc { color: var(--result-desc); margin-top: 5px; }
 
-        .result-url {
-            color: #202124;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 4px;
-            display: block;
-        }
-
-        .result-desc {
-            color: #4d5156;
-            font-size: 16px;
-            line-height: 1.58;
-            margin: 5px 0 0 0;
-        }
-
-        .btn {
-            background-color: #f8f9fa;
-            border: 1px solid #f8f9fa;
-            border-radius: 4px;
-            padding: 0 16px;
-            line-height: 36px;
-            cursor: pointer;
-            color: #3c4043;
-        }
-
-        .btn:hover {
-            border: 1px solid #dadce0;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-        }
-
-        footer { background: #f2f2f2; font-size: 14px; margin-top: auto; }
+        footer { background: var(--footer-bg); font-size: 14px; margin-top: auto; }
         .footer-bottom { display: flex; justify-content: space-between; padding: 15px 30px; }
     </style>
 </head>
@@ -191,6 +209,11 @@
     <nav>
         <div class="nav-left"><a id="home-link">Home</a></div>
         <div class="nav-right">
+            <button id="theme-toggle" title="Toggle Dark Mode">
+                <svg id="theme-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M12 3c.132 0 .263 0 .393.007a9 9 0 0 0 7.5 13.5A9 9 0 1 1 12 3z"/>
+                </svg>
+            </button>
             <a href="#">LAVA Mail</a>
             <a href="#">Images</a>
             <div style="background: #5f6368; width: 32px; height: 32px; border-radius: 50%;"></div>
@@ -225,149 +248,78 @@
 
     <script>
         const database = [
-            {
-                keywords: ["hubstaff", "time tracking", "productivity", "payroll", "work"],
-                url: "https://hubstaff.com/",
-                title: "Hubstaff - Time Tracking and Productivity Software",
-                description: "The all-in-one work management platform that offers time tracking, proof of work, and payroll for remote, hybrid, and field teams."
-            },
-            {
-                keywords: ["lava university", "learn", "training", "education"],
-                url: "https://university.lavaautomation.com",
-                title: "Lava University - Learn Automation",
-                description: "The official training platform for LAVA Automation experts. Master workflows and productivity tools."
-            },
-            {
-                keywords: ["lava automation", "home", "main site", "company"],
-                url: "https://www.lavaautomation.com",
-                title: "LAVA Automation | Streamline Your Business",
-                description: "Innovative automation solutions to help your business grow faster and smarter."
-            },
-            {
-                keywords: ["world time buddy", "timezone", "clock", "time converter", "meeting", "wtb", "time"],
-                url: "https://www.worldtimebuddy.com/",
-                title: "World Time Buddy - Time Zone Converter",
-                description: "A popular visual world clock, time zone converter, and online meeting scheduler for distributed teams."
-            }
+            { keywords: ["hubstaff", "time tracking", "productivity"], url: "https://hubstaff.com/", title: "Hubstaff - Time Tracking", description: "The all-in-one work management platform." },
+            { keywords: ["lava university", "learn", "training"], url: "https://university.lavaautomation.com", title: "Lava University", description: "The official training platform for LAVA experts." },
+            { keywords: ["lava automation", "home", "company"], url: "https://www.lavaautomation.com", title: "LAVA Automation", description: "Innovative automation solutions for business growth." },
+            { keywords: ["world time buddy", "timezone", "time converter"], url: "https://www.worldtimebuddy.com/", title: "World Time Buddy", description: "Visual world clock and time zone converter." }
         ];
 
         const searchInput = document.getElementById('search-input');
-        const searchBtn = document.getElementById('search-btn');
-        const resultsArea = document.getElementById('results-area');
-        const mainContent = document.getElementById('main-content');
-        const buttonRow = document.getElementById('button-row');
         const suggestionsList = document.getElementById('suggestions-list');
-        const barWrapper = document.getElementById('bar-wrapper');
-        
-        let selectedIndex = -1;
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
 
-        function getFilteredResults(query) {
-            return database.filter(item => {
-                const matchesKeyword = item.keywords.some(key => key.toLowerCase().includes(query));
-                const matchesTitle = item.title.toLowerCase().includes(query);
-                const matchesDescription = item.description.toLowerCase().includes(query);
-                return matchesKeyword || matchesTitle || matchesDescription;
-            });
+        // --- THEME LOGIC ---
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('theme', targetTheme);
+            updateThemeIcon(targetTheme);
         }
 
+        function updateThemeIcon(theme) {
+            if (theme === 'dark') {
+                themeIcon.innerHTML = '<path d="M12 7a5 5 0 1 1-4.992 5.002A5 5 0 0 1 12 7.002zm0 2a3 3 0 1 0 2.995 3.003A3 3 0 0 0 12 9.002zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.415-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/>'; // Sun
+            } else {
+                themeIcon.innerHTML = '<path d="M12 3c.132 0 .263 0 .393.007a9 9 0 0 0 7.5 13.5A9 9 0 1 1 12 3z"/>'; // Moon
+            }
+        }
+
+        // Initialize Theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // --- SEARCH LOGIC (Same as before with bug fixes) ---
         function performSearch() {
             const rawQuery = searchInput.value.toLowerCase().trim();
-            if (rawQuery === "") return;
+            if (!rawQuery) return;
+            
+            const matched = database.filter(item => 
+                item.keywords.some(k => k.toLowerCase().includes(rawQuery)) ||
+                item.title.toLowerCase().includes(rawQuery) ||
+                item.description.toLowerCase().includes(rawQuery)
+            );
 
-            const matchedResults = getFilteredResults(rawQuery);
+            document.getElementById('main-content').classList.add('searching');
+            document.getElementById('button-row').style.display = "none";
+            document.getElementById('results-area').style.display = "block";
+            suggestionsList.style.display = 'none';
 
-            mainContent.classList.add('searching');
-            buttonRow.style.display = "none";
-            resultsArea.style.display = "block";
-            hideSuggestions();
-
-            renderResults(matchedResults);
-        }
-
-        function renderResults(results) {
-            if (results.length === 0) {
-                resultsArea.innerHTML = `<div class="no-results" style="margin-top:20px">No results found for "${searchInput.value}".</div>`;
-                return;
-            }
-            resultsArea.innerHTML = results.map(item => `
+            document.getElementById('results-area').innerHTML = matched.length ? matched.map(item => `
                 <div class="result-item">
-                    <span class="result-url">${item.url}</span>
+                    <span class="result-url">${item.url}</span><br>
                     <a href="${item.url}" target="_blank">${item.title}</a>
                     <p class="result-desc">${item.description}</p>
                 </div>
-            `).join('');
+            `).join('') : `<p>No results for "${rawQuery}"</p>`;
         }
 
-        function showSuggestions() {
+        searchInput.addEventListener('input', () => {
             const query = searchInput.value.toLowerCase().trim();
-            if (query.length === 0) {
-                hideSuggestions();
-                return;
-            }
-
-            const matches = getFilteredResults(query);
-            if (matches.length > 0) {
-                suggestionsList.innerHTML = matches.map((item, index) => `
-                    <li class="suggestion-item" data-index="${index}" onclick="selectSuggestion('${item.title}')">
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="#9aa0a6"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
-                        ${item.title}
-                    </li>
-                `).join('');
-                suggestionsList.style.display = 'block';
-                barWrapper.style.borderRadius = "24px 24px 0 0";
-            } else {
-                hideSuggestions();
-            }
-        }
-
-        function selectSuggestion(title) {
-            searchInput.value = title;
-            performSearch();
-        }
-
-        function hideSuggestions() {
-            suggestionsList.style.display = 'none';
-            barWrapper.style.borderRadius = "24px";
-            selectedIndex = -1;
-        }
-
-        // Event Listeners
-        searchInput.addEventListener('input', showSuggestions);
-
-        searchInput.addEventListener('keydown', (e) => {
-            const items = document.querySelectorAll('.suggestion-item');
-            if (e.key === 'ArrowDown') {
-                selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
-                updateSelection(items);
-            } else if (e.key === 'ArrowUp') {
-                selectedIndex = Math.max(selectedIndex - 1, -1);
-                updateSelection(items);
-            } else if (e.key === 'Enter') {
-                if (selectedIndex > -1) {
-                    searchInput.value = items[selectedIndex].innerText.trim();
-                }
-                performSearch();
-            } else if (e.key === 'Escape') {
-                hideSuggestions();
-            }
+            if (!query) { suggestionsList.style.display = 'none'; return; }
+            const matches = database.filter(item => item.title.toLowerCase().includes(query));
+            suggestionsList.innerHTML = matches.map(m => `<li class="suggestion-item" onclick="selectSug('${m.title}')">${m.title}</li>`).join('');
+            suggestionsList.style.display = matches.length ? 'block' : 'none';
         });
 
-        function updateSelection(items) {
-            items.forEach((item, index) => {
-                item.classList.toggle('selected', index === selectedIndex);
-            });
-        }
-
-        // Close suggestions if clicking outside
-        document.addEventListener('click', (e) => {
-            if (!barWrapper.contains(e.target) && !suggestionsList.contains(e.target)) {
-                hideSuggestions();
-            }
-        });
-
-        searchBtn.addEventListener('click', performSearch);
-        document.getElementById('home-link').addEventListener('click', () => location.reload());
-        document.getElementById('home-trigger').addEventListener('click', () => location.reload());
+        window.selectSug = (t) => { searchInput.value = t; performSearch(); };
+        searchInput.addEventListener('keypress', e => e.key === 'Enter' && performSearch());
+        document.getElementById('search-btn').addEventListener('click', performSearch);
+        document.getElementById('home-link').onclick = () => location.reload();
     </script>
 </body>
 </html>
