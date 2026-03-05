@@ -228,15 +228,15 @@
             const rawQuery = searchInput.value.toLowerCase().trim();
             if (rawQuery === "") return;
 
-            // This version searches for keywords by seeing if they exist in the query string
-            // or if the query string exists in the keyword.
             const matchedResults = database.filter(item => {
-                const matchesKeyword = item.keywords.some(key => {
-                    return key.includes(rawQuery) || rawQuery.includes(key);
-                });
+                // Check keywords for a partial match
+                const matchesKeyword = item.keywords.some(key => key.toLowerCase().includes(rawQuery));
                 
+                // Check title and description for a partial match
                 const matchesTitle = item.title.toLowerCase().includes(rawQuery);
-                return matchesKeyword || matchesTitle;
+                const matchesDescription = item.description.toLowerCase().includes(rawQuery);
+                
+                return matchesKeyword || matchesTitle || matchesDescription;
             });
 
             // Layout updates
