@@ -329,6 +329,11 @@
         document.getElementById('search-btn').addEventListener('click', performSearch);
         document.getElementById('home-link').onclick = () => location.reload();
         document.getElementById('home-trigger').onclick = () => location.reload();
+
+        // --- NEW JAVASCRIPT FOR AMA REDIRECT ---
+        document.getElementById('ama-btn').onclick = () => {
+            window.location.href = 'ama.html';
+        };
     </script>
 </body>
 </html>
