@@ -207,16 +207,26 @@
         const buttonRow = document.getElementById('button-row');
 
         function performSearch() {
-            const query = searchInput.value.toLowerCase().trim();
-            if (query === "") return;
+            const rawQuery = searchInput.value.toLowerCase().trim();
+            if (rawQuery === "") return;
+
+            // "Fuzzy" Query: Remove spaces so "hub staff" becomes "hubstaff"
+            const cleanQuery = rawQuery.replace(/\s+/g, '');
 
             mainContent.classList.add('searching');
             buttonRow.style.display = "none";
             resultsArea.style.display = "block";
 
             const matchedResults = database.filter(item => {
-                const matchesKeyword = item.keywords.some(key => key.includes(query));
-                const matchesTitle = item.title.toLowerCase().includes(query);
+                // Check if cleaned query matches cleaned keywords or title
+                const matchesKeyword = item.keywords.some(key => {
+                    const cleanKey = key.replace(/\s+/g, '');
+                    return cleanKey.includes(cleanQuery) || cleanQuery.includes(cleanKey);
+                });
+                
+                const cleanTitle = item.title.toLowerCase().replace(/\s+/g, '');
+                const matchesTitle = cleanTitle.includes(cleanQuery);
+
                 return matchesKeyword || matchesTitle;
             });
 
