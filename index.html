@@ -88,7 +88,6 @@
             width: 272px;
             margin-bottom: 30px;
             transition: width 0.3s;
-            /* CRITICAL FIX: Removed the filter that caused the red to turn blue */
             filter: none !important;
         }
 
@@ -229,7 +228,7 @@
             
             <div class="buttons" id="button-row">
                 <button class="btn" id="search-btn">LAVA Search</button>
-                <button class="btn">I'm Feeling Productive</button>
+                <button class="btn" id="ama-btn">Ask Me Anything</button>
             </div>
             <div id="results-area"></div>
         </div>
@@ -256,17 +255,12 @@
         const themeIcon = document.getElementById('theme-icon');
         const mainLogo = document.getElementById('main-logo');
 
-        // --- DEFINE LOGO URLS ---
         const logoLight = "https://48034691.fs1.hubspotusercontent-na1.net/hubfs/48034691/__hs-marketplace__/LAVA%20Logo%20-%20Black-1.png";
-        // REPLACE THIS PLACEHOLDER WITH THE ACTUAL URL OF YOUR LOGO DESIGNED FOR DARK BACKGROUNDS
         const logoDark = "LAVA_LOGO_FOR_DARK_MODE_HERE"; 
 
-
-        // --- THEME LOGIC ---
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
             setTheme(targetTheme);
         }
 
@@ -279,28 +273,25 @@
 
         function updateThemeIcon(theme) {
             if (theme === 'dark') {
-                themeIcon.innerHTML = '<path d="M12 7a5 5 0 1 1-4.992 5.002A5 5 0 0 1 12 7.002zm0 2a3 3 0 1 0 2.995 3.003A3 3 0 0 0 12 9.002zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.415-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/>'; // Sun
+                themeIcon.innerHTML = '<path d="M12 7a5 5 0 1 1-4.992 5.002A5 5 0 0 1 12 7.002zm0 2a3 3 0 1 0 2.995 3.003A3 3 0 0 0 12 9.002zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.415-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/>';
             } else {
-                themeIcon.innerHTML = '<path d="M12 3c.132 0 .263 0 .393.007a9 9 0 0 0 7.5 13.5A9 9 0 1 1 12 3z"/>'; // Moon
+                themeIcon.innerHTML = '<path d="M12 3c.132 0 .263 0 .393.007a9 9 0 0 0 7.5 13.5A9 9 0 1 1 12 3z"/>';
             }
         }
 
         function updateLogo(theme) {
             if (theme === 'dark') {
-                // If logoDark is still the placeholder, we fallback to light so it doesn't break
                 mainLogo.src = logoDark === "LAVA_LOGO_FOR_DARK_MODE_HERE" ? logoLight : logoDark;
             } else {
                 mainLogo.src = logoLight;
             }
         }
 
-        // Initialize Theme
         const savedTheme = localStorage.getItem('theme') || 'light';
-        setTheme(savedTheme); // Run setTheme once on load to establish the state
+        setTheme(savedTheme);
         
         themeToggle.addEventListener('click', toggleTheme);
 
-        // --- SEARCH LOGIC (Same as before) ---
         function performSearch() {
             const rawQuery = searchInput.value.toLowerCase().trim();
             if (!rawQuery) return;
