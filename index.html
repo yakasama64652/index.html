@@ -28,7 +28,6 @@
         main.searching .logo { width: 150px; margin-bottom: 20px; }
         .search-container { width: 100%; display: flex; flex-direction: column; align-items: center; position: relative; }
         
-        /* Fixed Search Bar & Suggestion Wrapper */
         .search-bar-wrapper { display: flex; align-items: center; border: 1px solid var(--search-border); border-radius: 24px; width: 584px; max-width: 90%; padding: 5px 15px; background: var(--bg-color); z-index: 10; position: relative; }
         .search-bar-wrapper:hover, .search-bar-wrapper:focus-within { box-shadow: 0 1px 6px rgba(32,33,36,.28); border-color: transparent; }
         .search-bar-wrapper input { border: none; outline: none; height: 34px; font-size: 16px; flex-grow: 1; padding: 0 10px; background: transparent; color: var(--text-color); }
@@ -98,7 +97,6 @@
     <footer><div class="footer-bottom"><span>Australia</span><span>Privacy & Terms</span></div></footer>
 
     <script>
-        // Database with 'type' categories for tab filtering
         const database = [
             { type: "all", keywords: ["hubstaff", "time tracking", "productivity"], url: "https://hubstaff.com/", title: "Hubstaff - Time Tracking", description: "The all-in-one work management platform." },
             { type: "all", keywords: ["lava university", "learn", "training"], url: "https://university.lavaautomation.com", title: "Lava University", description: "Official training platform for LAVA experts." },
@@ -116,7 +114,7 @@
         
         let currentTab = 'all';
 
-        // --- 1. Suggestions Logic ---
+        // Suggestions Logic
         searchInput.addEventListener('input', () => {
             const query = searchInput.value.toLowerCase().trim();
             suggestionsList.innerHTML = '';
@@ -147,7 +145,6 @@
             }
         });
 
-        // --- 2. Search & Tab Logic ---
         function performSearch() {
             const query = searchInput.value.toLowerCase().trim();
             if (!query) return;
@@ -161,10 +158,16 @@
             renderResults(query);
         }
 
+        // FIXED LOGIC HERE
         function renderResults(query) {
             const filtered = database.filter(item => {
-                const matchQuery = item.title.toLowerCase().includes(query) || item.keywords.some(k => k.includes(query));
+                const matchQuery = item.title.toLowerCase().includes(query) || 
+                                   item.keywords.some(k => k.includes(query));
+                
+                // If on "All" tab, show everything that matches the query
                 if (currentTab === 'all') return matchQuery;
+                
+                // If on a specific tab, match query AND specific type
                 return matchQuery && item.type === currentTab;
             });
 
@@ -185,21 +188,18 @@
             renderResults(searchInput.value);
         };
 
-        // --- 3. AMA Integration ---
         document.getElementById('ama-btn').onclick = () => {
             const query = searchInput.value.trim();
             if(query) localStorage.setItem('lava_last_query', query);
             window.location.href = 'ama.html';
         };
 
-        // Event Listeners
         document.getElementById('search-btn').onclick = performSearch;
         searchInput.onkeypress = (e) => { if (e.key === 'Enter') performSearch(); };
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.search-bar-wrapper')) suggestionsList.style.display = 'none';
         });
 
-        // Theme logic
         const themeIcon = document.getElementById('theme-icon');
         function setTheme(t) {
             document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t);
