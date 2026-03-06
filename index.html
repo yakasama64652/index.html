@@ -170,6 +170,7 @@
             line-height: 36px;
             cursor: pointer;
             color: var(--btn-text);
+            font-size: 14px;
         }
 
         .btn:hover { border: 1px solid var(--search-border); }
@@ -228,6 +229,7 @@
             
             <div class="buttons" id="button-row">
                 <button class="btn" id="search-btn">LAVA Search</button>
+                <button class="btn" id="faq-btn">FAQ</button>
                 <button class="btn" id="ama-btn">Ask Me Anything</button>
             </div>
             <div id="results-area"></div>
@@ -330,7 +332,11 @@
         document.getElementById('home-link').onclick = () => location.reload();
         document.getElementById('home-trigger').onclick = () => location.reload();
 
-        // --- NEW JAVASCRIPT FOR AMA REDIRECT ---
+        // --- NAVIGATION REDIRECTS ---
+        document.getElementById('faq-btn').onclick = () => {
+            window.location.href = 'faq.html';
+        };
+
         document.getElementById('ama-btn').onclick = () => {
             window.location.href = 'ama.html';
         };
