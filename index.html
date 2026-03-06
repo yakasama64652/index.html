@@ -27,25 +27,36 @@
         .logo { width: 272px; margin-bottom: 30px; transition: width 0.3s; cursor: pointer; }
         main.searching .logo { width: 150px; margin-bottom: 20px; }
         .search-container { width: 100%; display: flex; flex-direction: column; align-items: center; position: relative; }
+        
+        /* Fixed Search Bar & Suggestion Wrapper */
         .search-bar-wrapper { display: flex; align-items: center; border: 1px solid var(--search-border); border-radius: 24px; width: 584px; max-width: 90%; padding: 5px 15px; background: var(--bg-color); z-index: 10; position: relative; }
+        .search-bar-wrapper:hover, .search-bar-wrapper:focus-within { box-shadow: 0 1px 6px rgba(32,33,36,.28); border-color: transparent; }
         .search-bar-wrapper input { border: none; outline: none; height: 34px; font-size: 16px; flex-grow: 1; padding: 0 10px; background: transparent; color: var(--text-color); }
+        
         .search-icons { display: flex; align-items: center; gap: 12px; color: #70757a; }
-        #voice-btn.listening { color: var(--mic-active); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        #image-menu { position: absolute; top: 45px; right: 10px; background: var(--bg-color); border: 1px solid var(--search-border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; flex-direction: column; width: 160px; z-index: 100; }
-        .menu-item { padding: 12px 15px; font-size: 14px; cursor: pointer; }
-        #suggestions-list { width: 100%; background: var(--bg-color); border: 1px solid var(--search-border); border-top: none; border-radius: 0 0 24px 24px; display: none; position: absolute; top: 40px; left: 0; list-style: none; padding: 10px 0; margin: 0; z-index: 5; }
-        .suggestion-item { padding: 10px 20px; cursor: pointer; }
+        #suggestions-list { 
+            width: 100%; background: var(--bg-color); border: 1px solid var(--search-border); 
+            border-top: none; border-radius: 0 0 24px 24px; display: none; 
+            position: absolute; top: 35px; left: 0; list-style: none; 
+            padding: 10px 0; margin: 0; z-index: 5; box-shadow: 0 4px 6px rgba(32,33,36,.28);
+        }
+        .suggestion-item { padding: 10px 20px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        .suggestion-item:hover { background-color: var(--suggestion-hover); }
+
         .search-tabs { display: none; width: 584px; max-width: 90%; margin-top: 20px; border-bottom: 1px solid var(--search-border); gap: 20px; }
         .tab { padding: 10px 5px; cursor: pointer; font-size: 14px; color: var(--result-desc); border-bottom: 3px solid transparent; }
         .tab.active { color: var(--accent-color); border-bottom: 3px solid var(--accent-color); font-weight: bold; }
+        
         .buttons { margin-top: 30px; display: flex; gap: 12px; }
         .btn { background-color: var(--btn-bg); border: 1px solid var(--btn-bg); border-radius: 4px; padding: 0 16px; line-height: 36px; cursor: pointer; color: var(--btn-text); font-size: 14px; }
         #results-area { margin-top: 20px; width: 584px; max-width: 90%; display: none; }
-        .result-item { padding: 20px 0; border-bottom: 1px solid var(--search-border); text-align: left; }
+        .result-item { padding: 20px 0; border-bottom: 1px solid var(--search-border); text-align: left; animation: fadeIn 0.3s ease; }
         .result-item a { color: var(--result-link); font-size: 20px; text-decoration: none; }
-        .result-item .result-url { font-size: 14px; color: var(--text-color); opacity: 0.7; display: block; }
-        footer { background: var(--footer-bg); font-size: 14px; margin-top: auto; }
+        .result-item a:hover { text-decoration: underline; }
+        .result-item .result-url { font-size: 14px; color: var(--text-color); opacity: 0.7; display: block; overflow: hidden; text-overflow: ellipsis; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        footer { background: var(--footer-bg); font-size: 14px; margin-top: auto; border-top: 1px solid var(--search-border); }
         .footer-bottom { display: flex; justify-content: space-between; padding: 15px 30px; }
     </style>
 </head>
@@ -65,25 +76,21 @@
                 <input type="text" id="search-input" autocomplete="off" autofocus placeholder="Search LAVA...">
                 <div class="search-icons">
                     <svg id="voice-btn" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-                    <svg id="img-trigger" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-1.96-2.36L6.5 17h11l-3.54-4.71z"/></svg>
-                </div>
-                <div id="image-menu">
-                    <div class="menu-item" onclick="document.getElementById('file-input').click()">Upload File</div>
-                    <div class="menu-item" onclick="handlePasteUrl()">Paste URL</div>
                 </div>
                 <ul id="suggestions-list"></ul>
             </div>
-            <input type="file" id="file-input" style="display:none" accept="image/*">
+            
             <div class="search-tabs" id="search-tabs">
                 <div class="tab active" data-type="all" onclick="switchTab('all')">All</div>
                 <div class="tab" data-type="images" onclick="switchTab('images')">Images</div>
                 <div class="tab" data-type="videos" onclick="switchTab('videos')">Videos</div>
                 <div class="tab" data-type="presentation" onclick="switchTab('presentation')">Presentation</div>
             </div>
+
             <div class="buttons" id="button-row">
                 <button class="btn" id="search-btn">LAVA Search</button>
                 <button class="btn" id="faq-btn" onclick="window.location.href='faq.html'">FAQ</button>
-                <button class="btn" id="ama-btn" onclick="window.location.href='ama.html'">Ask Me Anything</button>
+                <button class="btn" id="ama-btn">Ask Me Anything</button>
             </div>
             <div id="results-area"></div>
         </div>
@@ -91,12 +98,13 @@
     <footer><div class="footer-bottom"><span>Australia</span><span>Privacy & Terms</span></div></footer>
 
     <script>
+        // Database with 'type' categories for tab filtering
         const database = [
-            { keywords: ["hubstaff", "time tracking"], url: "https://hubstaff.com/", title: "Hubstaff - Time Tracking", description: "The all-in-one work management platform." },
-            { keywords: ["lava university", "learn"], url: "https://university.lavaautomation.com", title: "Lava University", description: "Official training platform for LAVA experts." },
-            { keywords: ["lava automation", "company"], url: "https://www.lavaautomation.com", title: "LAVA Automation", description: "Innovative automation solutions." },
-            { keywords: ["world time buddy", "timezone"], url: "https://www.worldtimebuddy.com/", title: "World Time Buddy", description: "Visual world clock and time zone converter." },
-            { keywords: ["insurance", "vimeo"], url: "https://vimeo.com/1123938577?share=copy&fl=sv&fe=ci", title: "Commercial Insurance - Common Types of Commercial Insurance Overview", description: "Overview of common business coverage." }
+            { type: "all", keywords: ["hubstaff", "time tracking", "productivity"], url: "https://hubstaff.com/", title: "Hubstaff - Time Tracking", description: "The all-in-one work management platform." },
+            { type: "all", keywords: ["lava university", "learn", "training"], url: "https://university.lavaautomation.com", title: "Lava University", description: "Official training platform for LAVA experts." },
+            { type: "all", keywords: ["lava automation", "company"], url: "https://www.lavaautomation.com", title: "LAVA Automation", description: "Innovative automation solutions." },
+            { type: "all", keywords: ["world time buddy", "timezone"], url: "https://www.worldtimebuddy.com/", title: "World Time Buddy", description: "Visual world clock and time zone converter." },
+            { type: "videos", keywords: ["insurance", "vimeo", "commercial"], url: "https://vimeo.com/1123938577?share=copy&fl=sv&fe=ci", title: "Commercial Insurance - Common Types of Commercial Insurance Overview", description: "Overview of common business coverage." }
         ];
 
         const searchInput = document.getElementById('search-input');
@@ -105,31 +113,92 @@
         const buttonRow = document.getElementById('button-row');
         const searchTabs = document.getElementById('search-tabs');
         const suggestionsList = document.getElementById('suggestions-list');
+        
+        let currentTab = 'all';
 
-        function performSearch(queryOverride) {
-            const query = (queryOverride || searchInput.value).toLowerCase().trim();
+        // --- 1. Suggestions Logic ---
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase().trim();
+            suggestionsList.innerHTML = '';
+            
+            if (query) {
+                const matches = database.filter(item => 
+                    item.title.toLowerCase().includes(query) || 
+                    item.keywords.some(k => k.includes(query))
+                ).slice(0, 6);
+
+                if (matches.length > 0) {
+                    suggestionsList.style.display = 'block';
+                    matches.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'suggestion-item';
+                        li.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="#9aa0a6" style="margin-right:10px;"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg> ${item.title}`;
+                        li.onclick = () => {
+                            searchInput.value = item.title;
+                            performSearch();
+                        };
+                        suggestionsList.appendChild(li);
+                    });
+                } else {
+                    suggestionsList.style.display = 'none';
+                }
+            } else {
+                suggestionsList.style.display = 'none';
+            }
+        });
+
+        // --- 2. Search & Tab Logic ---
+        function performSearch() {
+            const query = searchInput.value.toLowerCase().trim();
             if (!query) return;
+
+            suggestionsList.style.display = 'none';
             mainContent.classList.add('searching');
             buttonRow.style.display = 'none';
             searchTabs.style.display = 'flex';
             resultsArea.style.display = 'block';
-            suggestionsList.style.display = 'none';
 
-            const matched = database.filter(item => item.title.toLowerCase().includes(query) || item.keywords.some(k => k.includes(query)));
-            
-            // SAVE CONTEXT FOR AMA PAGE
-            if (matched.length > 0) {
-                localStorage.setItem('lava_current_context', JSON.stringify({ title: matched[0].title, url: matched[0].url }));
-            }
-
-            resultsArea.innerHTML = matched.length ? matched.map(item => `
-                <div class="result-item"><span class="result-url">${item.url}</span><br><a href="${item.url}" target="_blank">${item.title}</a><p class="result-desc">${item.description}</p></div>
-            `).join('') : `<p>No results found.</p>`;
+            renderResults(query);
         }
 
-        document.getElementById('search-btn').onclick = () => performSearch();
-        searchInput.onkeypress = (e) => { if(e.key === 'Enter') performSearch(); };
-        
+        function renderResults(query) {
+            const filtered = database.filter(item => {
+                const matchQuery = item.title.toLowerCase().includes(query) || item.keywords.some(k => k.includes(query));
+                if (currentTab === 'all') return matchQuery;
+                return matchQuery && item.type === currentTab;
+            });
+
+            resultsArea.innerHTML = filtered.length > 0 
+                ? filtered.map(item => `
+                    <div class="result-item">
+                        <span class="result-url">${item.url}</span>
+                        <a href="${item.url}" target="_blank">${item.title}</a>
+                        <p class="result-desc">${item.description}</p>
+                    </div>`).join('')
+                : `<p style="margin-top:20px;">No results found for "${query}" in the ${currentTab} category.</p>`;
+        }
+
+        window.switchTab = (tabName) => {
+            currentTab = tabName;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[data-type="${tabName}"]`).classList.add('active');
+            renderResults(searchInput.value);
+        };
+
+        // --- 3. AMA Integration ---
+        document.getElementById('ama-btn').onclick = () => {
+            const query = searchInput.value.trim();
+            if(query) localStorage.setItem('lava_last_query', query);
+            window.location.href = 'ama.html';
+        };
+
+        // Event Listeners
+        document.getElementById('search-btn').onclick = performSearch;
+        searchInput.onkeypress = (e) => { if (e.key === 'Enter') performSearch(); };
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-bar-wrapper')) suggestionsList.style.display = 'none';
+        });
+
         // Theme logic
         const themeIcon = document.getElementById('theme-icon');
         function setTheme(t) {
@@ -138,12 +207,6 @@
         }
         setTheme(localStorage.getItem('theme') || 'light');
         document.getElementById('theme-toggle').onclick = () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-
-        // Image Menu
-        const imgTrigger = document.getElementById('img-trigger');
-        const imgMenu = document.getElementById('image-menu');
-        imgTrigger.onclick = (e) => { e.stopPropagation(); imgMenu.style.display = imgMenu.style.display === 'flex' ? 'none' : 'flex'; };
-        document.addEventListener('click', () => imgMenu.style.display = 'none');
     </script>
 </body>
 </html>
