@@ -117,10 +117,6 @@
         .result-item .result-url { font-size: 14px; color: var(--text-color); opacity: 0.7; display: block; margin-bottom: 2px;}
         .result-desc { color: var(--result-desc); margin-top: 5px; font-size: 14px; }
 
-        /* Gallery Grid for Image Tab */
-        .image-results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
-        .image-card { border-radius: 8px; overflow: hidden; background: #eee; height: 120px; }
-
         footer { background: var(--footer-bg); font-size: 14px; margin-top: auto; }
         .footer-bottom { display: flex; justify-content: space-between; padding: 15px 30px; }
     </style>
@@ -181,12 +177,13 @@
     </footer>
 
     <script>
+        // Database expanded with more keywords for the Vimeo Link
         const database = [
             { keywords: ["hubstaff", "time tracking", "work management"], url: "https://hubstaff.com/", title: "Hubstaff - Time Tracking", description: "The all-in-one work management platform for tracking time and productivity." },
             { keywords: ["lava university", "learn", "training"], url: "https://university.lavaautomation.com", title: "Lava University", description: "The official training platform for LAVA experts and automation specialists." },
             { keywords: ["lava automation", "company", "home"], url: "https://www.lavaautomation.com", title: "LAVA Automation", description: "Innovative automation solutions designed for business growth and efficiency." },
             { keywords: ["world time buddy", "timezone", "visual clock", "time converter"], url: "https://www.worldtimebuddy.com/", title: "World Time Buddy", description: "Visual world clock and time zone converter for scheduling meetings across timezones." },
-            { keywords: ["vimeo", "lava video", "intro"], url: "https://vimeo.com/1123938577?share=copy&fl=sv&fe=ci", title: "LAVA Introduction Video", description: "Watch our detailed overview and introduction on Vimeo." }
+            { keywords: ["vimeo", "lava video", "intro", "introduction", "watch", "tutorial"], url: "https://vimeo.com/1123938577?share=copy&fl=sv&fe=ci", title: "LAVA Introduction Video", description: "Watch our detailed overview and official introduction video on Vimeo to understand the LAVA ecosystem." }
         ];
 
         const searchInput = document.getElementById('search-input');
@@ -213,20 +210,18 @@
 
         function switchTab(category) {
             currentCategory = category;
-            
-            // Update Active Tab UI
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
                 if(tab.getAttribute('data-type') === category) tab.classList.add('active');
             });
-
             const query = searchInput.value.toLowerCase().trim();
             if (query) renderResults(category, query);
         }
 
         function renderResults(category, query) {
-            resultsArea.innerHTML = ""; // Clear current results
+            resultsArea.innerHTML = ""; 
 
+            // Logic for "All" tab - searches the database array
             if (category === 'all') {
                 const matched = database.filter(item => 
                     item.title.toLowerCase().includes(query) || 
@@ -243,40 +238,49 @@
                 `).join('') : `<p>No results found for "${query}".</p>`;
             } 
             else if (category === 'images') {
-                resultsArea.innerHTML = `<h3>Image results for "${query}"</h3><div class="image-results-grid">
-                    ${Array(6).fill().map(() => `<div class="image-card"></div>`).join('')}
+                resultsArea.innerHTML = `<h3>Image results for "${query}"</h3><div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;">
+                    ${Array(6).fill().map(() => `<div style="height:100px; background:#ddd; border-radius:8px;"></div>`).join('')}
                 </div>`;
             }
             else if (category === 'videos') {
-                resultsArea.innerHTML = `<h3>Video results for "${query}"</h3>
+                // Specifically filter for the Vimeo link or other video-like keywords
+                const videoMatches = database.filter(item => 
+                    item.url.includes("vimeo") || item.title.toLowerCase().includes("video") || item.keywords.includes("video")
+                );
+
+                resultsArea.innerHTML = `<h3>Video results for "${query}"</h3>` + 
+                    (videoMatches.length ? videoMatches.map(item => `
                     <div class="result-item">
-                        <span class="result-url">vimeo.com</span>
-                        <a href="https://vimeo.com/1123938577?share=copy&fl=sv&fe=ci" target="_blank">LAVA Introduction Video - Watch on Vimeo</a>
-                        <p class="result-desc">An official introduction to the LAVA ecosystem and its benefits.</p>
-                    </div>
-                    <div class="result-item"><a>Video Tutorial: How to use ${query}</a><p class="result-desc">2.4M views • 3 days ago</p></div>
-                    <div class="result-item"><a>Top 10 Tips for ${query}</a><p class="result-desc">150k views • 1 month ago</p></div>`;
+                        <span class="result-url">${item.url}</span>
+                        <a href="${item.url}" target="_blank">${item.title}</a>
+                        <p class="result-desc">${item.description}</p>
+                    </div>`).join('') : `<p>No specific LAVA videos matched.</p>`);
             }
             else if (category === 'presentation') {
                 resultsArea.innerHTML = `<h3>Presentations for "${query}"</h3>
-                    <div class="result-item"><a>PDF: ${query} Masterclass Slides</a><p class="result-desc">Downloadable presentation on automation strategies.</p></div>
-                    <div class="result-item"><a>SlideShare: Implementing ${query} at Scale</a><p class="result-desc">Corporate deck from the 2025 Automation Summit.</p></div>`;
+                    <div class="result-item"><a>PDF: LAVA Masterclass Slides</a><p class="result-desc">Professional automation strategy deck.</p></div>`;
             }
         }
 
-        // --- Event Listeners ---
-        document.getElementById('search-btn').onclick = () => performSearch();
-        searchInput.onkeypress = (e) => { if(e.key === 'Enter') performSearch(); };
-
+        // --- Suggestions Logic ---
         searchInput.oninput = () => {
             const q = searchInput.value.toLowerCase().trim();
             if (!q) { suggestionsList.style.display = 'none'; return; }
-            const matches = database.filter(item => item.title.toLowerCase().includes(q));
+            
+            // Filter database for suggestions based on title OR keywords
+            const matches = database.filter(item => 
+                item.title.toLowerCase().includes(q) || 
+                item.keywords.some(k => k.toLowerCase().startsWith(q))
+            );
+
             suggestionsList.innerHTML = matches.map(m => `<li class="suggestion-item" onclick="searchInput.value='${m.title}'; performSearch();">${m.title}</li>`).join('');
             suggestionsList.style.display = matches.length ? 'block' : 'none';
         };
 
-        // --- Voice Logic ---
+        // --- Event Listeners & Utilities ---
+        document.getElementById('search-btn').onclick = () => performSearch();
+        searchInput.onkeypress = (e) => { if(e.key === 'Enter') performSearch(); };
+
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
             const rec = new SpeechRecognition();
@@ -299,14 +303,13 @@
 
         function handlePasteUrl() {
             const url = prompt("Paste Image URL:");
-            if(url) { searchInput.value = "Searching for image..."; performSearch("lava automation"); }
+            if(url) { searchInput.value = "Image Analysis Result"; performSearch("lava automation"); }
         }
 
         document.getElementById('file-input').onchange = (e) => {
             if(e.target.files[0]) { searchInput.value = e.target.files[0].name; performSearch("lava automation"); }
         };
 
-        // --- Theme ---
         const themeIcon = document.getElementById('theme-icon');
         function setTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
