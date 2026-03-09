@@ -88,6 +88,7 @@
 
             <div class="buttons" id="button-row">
                 <button class="btn" id="search-btn">LAVA Search</button>
+                <button class="btn" id="simulators-btn" onclick="window.location.href='simulators.html'">Simulators</button>
                 <button class="btn" id="faq-btn" onclick="window.location.href='faq.html'">FAQ</button>
                 <button class="btn" id="ama-btn">Ask Me Anything</button>
             </div>
@@ -158,16 +159,12 @@
             renderResults(query);
         }
 
-        // FIXED LOGIC HERE
         function renderResults(query) {
             const filtered = database.filter(item => {
                 const matchQuery = item.title.toLowerCase().includes(query) || 
                                    item.keywords.some(k => k.includes(query));
                 
-                // If on "All" tab, show everything that matches the query
                 if (currentTab === 'all') return matchQuery;
-                
-                // If on a specific tab, match query AND specific type
                 return matchQuery && item.type === currentTab;
             });
 
