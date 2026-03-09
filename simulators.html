@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAVA Simulators</title>
+    <style>
+        :root {
+            --bg-color: #ffffff; --text-color: #202124; --nav-link: rgba(0,0,0,0.87);
+            --search-border: #dfe1e5; --card-bg: #ffffff; --card-hover: #f8f9fa;
+            --accent-color: #1a73e8; --footer-bg: #f2f2f2;
+        }
+        [data-theme="dark"] {
+            --bg-color: #202124; --text-color: #e8eaed; --nav-link: #e8eaed;
+            --search-border: #5f6368; --card-bg: #303134; --card-hover: #3c4043;
+            --accent-color: #8ab4f8; --footer-bg: #171717;
+        }
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; transition: background 0.3s; }
+        
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--search-border); }
+        nav a { text-decoration: none; color: var(--nav-link); font-size: 14px; cursor: pointer; }
+        
+        main { flex-grow: 1; max-width: 800px; width: 90%; margin: 40px auto; }
+        h1 { font-size: 24px; font-weight: 400; margin-bottom: 30px; }
+
+        .simulator-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        
+        .simulator-card {
+            background: var(--card-bg);
+            border: 1px solid var(--search-border);
+            border-radius: 8px;
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .simulator-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: var(--card-hover);
+            border-color: var(--accent-color);
+        }
+
+        .simulator-name { color: var(--accent-color); font-size: 18px; font-weight: bold; }
+        .simulator-desc { font-size: 14px; opacity: 0.8; line-height: 1.4; }
+
+        footer { background: var(--footer-bg); font-size: 14px; padding: 15px 30px; border-top: 1px solid var(--search-border); margin-top: auto; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-left"><a href="index.html">← Back to Search</a></div>
+        <div class="nav-right"><b>LAVA Simulators</b></div>
+    </nav>
+
+    <main>
+        <h1>Training Simulators</h1>
+        <div class="simulator-grid">
+            <a href="https://agent-69af1ffee327a232f536361a--studenrater.netlify.app/" target="_blank" class="simulator-card">
+                <span class="simulator-name">LAVA Rater</span>
+                <span class="simulator-desc">Interactive rating tool for insurance training and simulation.</span>
+            </a>
+
+            </div>
+    </main>
+
+    <footer>
+        <span>Australia</span>
+    </footer>
+
+    <script>
+        // Apply theme from LocalStorage to match the main page
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+</body>
+</html>
