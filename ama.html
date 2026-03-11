@@ -27,7 +27,6 @@
         .history-item { padding: 10px; border-radius: 8px; cursor: pointer; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: 0.2s; display: flex; align-items: center; }
         .history-item:hover { background: var(--chip-hover); }
 
-        /* Clear History Button */
         .clear-history-btn { margin-top: auto; padding: 12px; background: transparent; border: none; color: #70757a; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; border-radius: 8px; transition: 0.2s; }
         .clear-history-btn:hover { background: rgba(217, 48, 37, 0.1); color: var(--danger-red); }
 
@@ -95,7 +94,7 @@
                 <div class="suggestion-chips">
                     <div class="chip" onclick="quickSearch('Hubstaff')">Track my time</div>
                     <div class="chip" onclick="quickSearch('Lava University')">LAVA Training</div>
-                    <div class="chip" onclick="quickSearch('LAVA Rater')">LAVA Rater</div>
+                    <div class="chip" onclick="quickSearch('Security')">Security & Compliance</div>
                 </div>
             </div>
             
@@ -122,12 +121,32 @@
         const welcomeScreen = document.getElementById('welcome-screen');
         const historyList = document.getElementById('history-list');
 
+        // Central Database: Merging Search Resources and FAQ Content
         const database = [
-            { keywords: ["hubstaff"], url: "https://hubstaff.com/", title: "Hubstaff - Time Tracking", description: "The all-in-one work management platform." },
-            { keywords: ["university", "lava university"], url: "https://university.lavaautomation.com", title: "Lava University", description: "Official training platform for LAVA experts." },
-            { keywords: ["insurance"], url: "https://vimeo.com/1123938577", title: "Commercial Insurance Overview", description: "Overview of common business coverage." },
-            // Added LAVA Rater to the database
-            { keywords: ["rater", "lava rater", "simulator"], url: "https://agent-69af1ffee327a232f536361a--studenrater.netlify.app/", title: "LAVA Rater", description: "Interactive rating tool for insurance training and simulation." }
+            { type: "resource", keywords: ["hubstaff"], url: "https://hubstaff.com/", title: "Hubstaff - Time Tracking", description: "The all-in-one work management platform." },
+            { type: "resource", keywords: ["university", "lava university"], url: "https://university.lavaautomation.com", title: "Lava University", description: "Official training platform for LAVA experts." },
+            { type: "resource", keywords: ["insurance", "video"], url: "https://vimeo.com/1123938577", title: "Commercial Insurance Overview", description: "Overview of common business coverage." },
+            { type: "resource", keywords: ["rater", "lava rater", "simulator"], url: "https://agent-69af1ffee327a232f536361a--studenrater.netlify.app/", title: "LAVA Rater", description: "Interactive rating tool for insurance training and simulation." },
+            
+            // FAQ Mappings (from faq.html)
+            { 
+                type: "faq", 
+                keywords: ["train", "training", "day one", "coaching", "ramps up", "60 days"], 
+                question: "How are your virtual assistants trained?", 
+                answer: "Training starts on day one and ramps up fast. The first 60 days are intense and highly structured, ensuring your VA becomes productive quickly. Ongoing coaching and real-time support mean your VA keeps leveling up as your agency grows."
+            },
+            { 
+                type: "faq", 
+                keywords: ["can", "cant", "do", "task", "license", "binding", "discussing policy"], 
+                question: "What can and can’t a virtual assistant do?", 
+                answer: "Virtual assistants can handle tasks like quoting, follow-ups, data entry, and email outreach. <strong>The one line we don’t cross:</strong> they can’t do anything that requires a license. That includes binding coverage, discussing policy details, or giving insurance advice."
+            },
+            { 
+                type: "faq", 
+                keywords: ["security", "compliance", "soc 2", "certification", "data", "protect"], 
+                question: "How do you ensure security and compliance?", 
+                answer: "We take security seriously. Lava has completed its <strong>SOC 2 Type 1</strong> certification and is actively undergoing SOC 2 Type 2. We build systems with compliance in mind to protect your agency and client data every step of the way."
+            }
         ];
 
         // --- HISTORY LOGIC ---
@@ -194,29 +213,39 @@
 
             setTimeout(() => {
                 typingIndicator.style.display = "none";
+                const lowerQuery = query.toLowerCase();
+                
+                // Search the database for keywords
                 const matches = database.filter(item => 
-                    item.keywords.some(k => query.toLowerCase().includes(k)) || 
-                    item.title.toLowerCase().includes(query.toLowerCase())
+                    item.keywords.some(k => lowerQuery.includes(k)) || 
+                    (item.title && item.title.toLowerCase().includes(lowerQuery))
                 );
 
                 if (matches.length > 0) {
-                    displayResults(matches);
+                    renderAIResponse(matches);
                 } else {
-                    displaySimple("I couldn't find a specific resource for that. Try searching for LAVA University, Hubstaff, or LAVA Rater.");
+                    displaySimple("I couldn't find a specific resource for that. You can ask about VA training, SOC 2 security, or Hubstaff.");
                 }
             }, 800);
         }
 
-        function displayResults(items) {
+        function renderAIResponse(items) {
             items.forEach(item => {
                 const msg = document.createElement('div');
                 msg.className = 'ai-message';
-                msg.innerHTML = `
-                    <div class="ai-text">I've found this for you:</div>
-                    <a href="${item.url}" target="_blank" class="resource-card-rich">
-                        <span class="res-title">${item.title}</span>
-                        <div class="res-desc">${item.description}</div>
-                    </a>`;
+                
+                if (item.type === 'faq') {
+                    // Styled response for FAQ content
+                    msg.innerHTML = `<div class="ai-text"><strong>${item.question}</strong><br><br>${item.answer}</div>`;
+                } else {
+                    // Styled response for Resource Links
+                    msg.innerHTML = `
+                        <div class="ai-text">I've found this for you:</div>
+                        <a href="${item.url}" target="_blank" class="resource-card-rich">
+                            <span class="res-title">${item.title}</span>
+                            <div class="res-desc">${item.description}</div>
+                        </a>`;
+                }
                 chatDisplay.appendChild(msg);
             });
             chatDisplay.scrollTo({ top: chatDisplay.scrollHeight, behavior: 'smooth' });
