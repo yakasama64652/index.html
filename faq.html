@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - LAVA Search</title>
+    <style>
+        :root {
+            --bg-color: #ffffff; --text-color: #202124; --nav-link: rgba(0,0,0,0.87);
+            --search-border: #dfe1e5; --footer-bg: #f2f2f2; --accent-color: #1a73e8;
+            --card-bg: #ffffff;
+        }
+        [data-theme="dark"] {
+            --bg-color: #202124; --text-color: #e8eaed; --nav-link: #e8eaed;
+            --search-border: #5f6368; --footer-bg: #171717; --accent-color: #8ab4f8;
+            --card-bg: #303134;
+        }
+        body { 
+            margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Arial, sans-serif; 
+            background-color: var(--bg-color); color: var(--text-color); 
+            display: flex; flex-direction: column; min-height: 100vh; transition: 0.3s;
+        }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--search-border); }
+        nav a { text-decoration: none; color: var(--nav-link); cursor: pointer; font-size: 14px; }
+        .logo-small { width: 100px; cursor: pointer; }
+        
+        main { flex-grow: 1; max-width: 800px; margin: 40px auto; padding: 0 20px; width: 100%; box-sizing: border-box; }
+        h1 { font-size: 28px; margin-bottom: 30px; border-bottom: 2px solid var(--accent-color); display: inline-block; padding-bottom: 5px; }
+        
+        .faq-container { display: flex; flex-direction: column; gap: 20px; }
+        .faq-item { 
+            background: var(--card-bg); border: 1px solid var(--search-border); 
+            border-radius: 8px; padding: 25px; transition: transform 0.2s;
+        }
+        .faq-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .faq-question { font-weight: bold; font-size: 18px; color: var(--accent-color); margin-bottom: 12px; }
+        .faq-answer { line-height: 1.6; font-size: 16px; color: var(--text-color); opacity: 0.9; }
+        
+        hr { border: 0; border-top: 1px solid var(--search-border); margin: 10px 0; }
+        
+        #theme-toggle { background: none; border: none; cursor: pointer; color: var(--nav-link); }
+        footer { background: var(--footer-bg); font-size: 14px; margin-top: auto; border-top: 1px solid var(--search-border); padding: 15px 30px; display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <img src="https://48034691.fs1.hubspotusercontent-na1.net/hubfs/48034691/__hs-marketplace__/LAVA%20Logo%20-%20Black-1.png" 
+                 alt="LAVA" class="logo-small" onclick="window.location.href='index.html'">
+        </div>
+        <div class="nav-right" style="display: flex; gap: 15px; align-items: center;">
+            <button id="theme-toggle"><svg id="theme-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"></svg></button>
+            <a href="index.html">Back to Search</a>
+        </div>
+    </nav>
+
+    <main>
+        <h1>Frequently Asked Questions</h1>
+        
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">How are your virtual assistants trained?</div>
+                <div class="faq-answer">
+                    Training starts on day one and ramps up fast. The first 60 days are intense and highly structured, ensuring your VA becomes productive quickly, but it doesn't stop there. Ongoing coaching and real-time support mean your VA keeps leveling up as your agency grows.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What can and can’t a virtual assistant do?</div>
+                <div class="faq-answer">
+                    Virtual assistants can handle a wide range of tasks like quoting, follow-ups, data entry, email outreach, and more. <br><br>
+                    <strong>The one line we don’t cross:</strong> they can’t do anything that requires a license. That includes binding coverage, discussing policy details, or giving insurance advice.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do you ensure security and compliance?</div>
+                <div class="faq-answer">
+                    We take security seriously. Lava has completed its <strong>SOC 2 Type 1</strong> certification and is actively undergoing SOC 2 Type 2. We build systems with compliance in mind to protect your agency and client data every step of the way.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <span>Australia</span>
+        <span>© 2026 LAVA Automation</span>
+    </footer>
+
+    <script>
+        // Sync Theme with Main Page
+        const themeIcon = document.getElementById('theme-icon');
+        function setTheme(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('theme', t);
+            themeIcon.innerHTML = t === 'dark' 
+                ? '<path d="M12 7a5 5 0 1 1-4.992 5.002A5 5 0 0 1 12 7.002zM11 1h2v3h-2V1z"/>' 
+                : '<path d="M12 3c.132 0 .263 0 .393.007a9 9 0 0 0 7.5 13.5A9 9 0 1 1 12 3z"/>';
+        }
+        
+        // Load preference
+        setTheme(localStorage.getItem('theme') || 'light');
+        
+        document.getElementById('theme-toggle').onclick = () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        };
+    </script>
+</body>
+</html>
