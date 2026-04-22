@@ -9,7 +9,7 @@
             --bg-color: #ffffff; --text-color: #202124; --nav-link: rgba(0,0,0,0.87);
             --search-border: #dfe1e5; --btn-bg: #f8f9fa; --btn-text: #3c4043;
             --footer-bg: #f2f2f2; --result-link: #1a0dab; --result-desc: #4d5156;
-            --suggestion-hover: #f1f3f4; --accent-color: #1a73e8; --mic-active: #ea4335;
+            --suggestion-hover: #f1f3f4; --accent-color: #1a73e8;
             --chat-bg: #ffffff; --chat-accent: #1a73e8;
         }
         [data-theme="dark"] {
@@ -20,16 +20,20 @@
             --chat-bg: #1e1f20;
         }
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; flex-direction: column; height: 100vh; background-color: var(--bg-color); color: var(--text-color); transition: background 0.3s, color 0.3s; overflow-x: hidden; }
+        
+        /* NAVIGATION */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
         .nav-left, .nav-right { display: flex; gap: 15px; font-size: 13px; align-items: center; }
         nav a { text-decoration: none; color: var(--nav-link); cursor: pointer; }
         #theme-toggle { background: none; border: none; cursor: pointer; padding: 5px; display: flex; align-items: center; color: var(--nav-link); }
+        
+        /* MAIN SEARCH AREA */
         main { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s ease; }
         main.searching { justify-content: flex-start; padding-top: 20px; }
         .logo { width: 272px; margin-bottom: 30px; transition: width 0.3s; cursor: pointer; }
         main.searching .logo { width: 150px; margin-bottom: 20px; }
-        .search-container { width: 100%; display: flex; flex-direction: column; align-items: center; position: relative; }
         
+        .search-container { width: 100%; display: flex; flex-direction: column; align-items: center; position: relative; }
         .search-bar-wrapper { display: flex; align-items: center; border: 1px solid var(--search-border); border-radius: 24px; width: 584px; max-width: 90%; padding: 5px 15px; background: var(--bg-color); z-index: 10; position: relative; }
         .search-bar-wrapper:hover, .search-bar-wrapper:focus-within { box-shadow: 0 1px 6px rgba(32,33,36,.28); border-color: transparent; }
         .search-bar-wrapper input { border: none; outline: none; height: 34px; font-size: 16px; flex-grow: 1; padding: 0 10px; background: transparent; color: var(--text-color); }
@@ -44,36 +48,59 @@
         
         .buttons { margin-top: 30px; display: flex; gap: 12px; }
         .btn { background-color: var(--btn-bg); border: 1px solid var(--btn-bg); border-radius: 4px; padding: 0 16px; line-height: 36px; cursor: pointer; color: var(--btn-text); font-size: 14px; }
+        
+        /* RESULTS AREA */
         #results-area { margin-top: 20px; width: 584px; max-width: 90%; display: none; }
         .result-item { padding: 20px 0; border-bottom: 1px solid var(--search-border); text-align: left; animation: fadeIn 0.3s ease; }
         .result-item a { color: var(--result-link); font-size: 20px; text-decoration: none; }
         .result-item .result-url { font-size: 14px; color: var(--text-color); opacity: 0.7; display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* CUSTOM CHAT BUBBLE (YOUR LOGO) */
+        .ama-bubble { 
+            position: fixed; 
+            bottom: 25px; 
+            right: 25px; 
+            width: 70px; 
+            height: 70px; 
+            background: transparent; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            z-index: 1001; 
+            transition: transform 0.3s ease; 
+            animation: bubbleBounce 3s infinite ease-in-out; 
+        }
+        .ama-bubble:hover { transform: scale(1.15); }
+        .ama-bubble img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+        }
+        @keyframes bubbleBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* CHAT WINDOW */
+        .chat-window { position: fixed; bottom: 105px; right: 25px; width: 350px; height: 500px; background: var(--chat-bg); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: none; flex-direction: column; z-index: 1000; overflow: hidden; border: 1px solid var(--search-border); animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .chat-header { background: var(--chat-accent); color: white; padding: 18px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
+        .chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; font-size: 14px; scrollbar-width: none; }
+        .msg { padding: 10px 14px; border-radius: 18px; max-width: 80%; line-height: 1.4; }
+        .msg.user { align-self: flex-end; background: var(--chat-accent); color: white; border-bottom-right-radius: 4px; }
+        .msg.ai { align-self: flex-start; background: var(--btn-bg); color: var(--text-color); border: 1px solid var(--search-border); border-bottom-left-radius: 4px; }
+        
+        .chat-input-area { padding: 15px; border-top: 1px solid var(--search-border); display: flex; gap: 10px; background: var(--bg-color); }
+        .chat-input-area input { flex-grow: 1; border: 1px solid var(--search-border); border-radius: 24px; padding: 10px 18px; outline: none; background: var(--btn-bg); color: var(--text-color); font-family: inherit; }
+        .chat-send-btn { background: none; border: none; color: var(--chat-accent); cursor: pointer; font-weight: bold; font-size: 14px; }
+        
+        .resource-card { display: block; margin-top: 8px; padding: 10px; border: 1px solid var(--search-border); border-radius: 8px; text-decoration: none; color: inherit; font-size: 12px; background: rgba(0,0,0,0.03); transition: 0.2s; }
+        .resource-card:hover { border-color: var(--chat-accent); background: rgba(26, 115, 232, 0.05); }
 
         footer { background: var(--footer-bg); font-size: 14px; margin-top: auto; border-top: 1px solid var(--search-border); }
         .footer-bottom { display: flex; justify-content: space-between; padding: 15px 30px; }
 
-        /* --- MESSENGER STYLE CHAT --- */
-        .ama-bubble { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: linear-gradient(135deg, #4285f4, #9b72cb); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1001; transition: 0.3s; animation: bubbleBounce 3s infinite; }
-        .ama-bubble:hover { transform: scale(1.1); }
-        @keyframes bubbleBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        .chat-window { position: fixed; bottom: 90px; right: 20px; width: 350px; height: 500px; background: var(--chat-bg); border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); display: none; flex-direction: column; z-index: 1000; overflow: hidden; border: 1px solid var(--search-border); animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
-        .chat-header { background: var(--chat-accent); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
-        .chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 14px; scrollbar-width: none; }
-        .chat-messages::-webkit-scrollbar { display: none; }
-        .msg { padding: 8px 12px; border-radius: 15px; max-width: 80%; line-height: 1.4; }
-        .msg.user { align-self: flex-end; background: var(--chat-accent); color: white; }
-        .msg.ai { align-self: flex-start; background: var(--btn-bg); color: var(--text-color); border: 1px solid var(--search-border); }
-        
-        .chat-input-area { padding: 10px; border-top: 1px solid var(--search-border); display: flex; gap: 8px; }
-        .chat-input-area input { flex-grow: 1; border: 1px solid var(--search-border); border-radius: 20px; padding: 8px 15px; outline: none; background: transparent; color: var(--text-color); }
-        .chat-send-btn { background: none; border: none; color: var(--chat-accent); cursor: pointer; font-weight: bold; }
-        
-        .resource-card { display: block; margin-top: 5px; padding: 8px; border: 1px solid var(--search-border); border-radius: 8px; text-decoration: none; color: inherit; font-size: 12px; background: rgba(0,0,0,0.03); }
-        .resource-card:hover { border-color: var(--chat-accent); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -84,8 +111,9 @@
             <a href="#">LAVA Mail</a><a href="#">Images</a>
         </div>
     </nav>
+
     <main id="main-content">
-        <img src="https://48034691.fs1.hubspotusercontent-na1.net/hubfs/48034691/__hs-marketplace__/LAVA%20Logo%20-%20Black-1.png" alt="LAVA" class="logo" onclick="location.reload()">
+        <img src="https://48034691.fs1.hubspotusercontent-na1.net/hubfs/48034691/__hs-marketplace__/LAVA%20Logo%20-%20Black-1.png" alt="LAVA" class="logo" id="main-logo">
         <div class="search-container">
             <div class="search-bar-wrapper">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="#9aa0a6"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
@@ -112,7 +140,7 @@
     </main>
 
     <div class="ama-bubble" onclick="toggleChat()">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        <img src="kling_20260422_VIDEO__1217_0.gif" alt="LAVA AI">
     </div>
 
     <div class="chat-window" id="chat-window">
@@ -121,7 +149,7 @@
             <span style="cursor:pointer" onclick="toggleChat()">✕</span>
         </div>
         <div class="chat-messages" id="chat-messages">
-            <div class="msg ai">Hi! How can I help you today?</div>
+            <div class="msg ai">Hi! I'm the LAVA assistant. How can I help you today?</div>
         </div>
         <div class="chat-input-area">
             <input type="text" id="widget-input" placeholder="Ask a question..." autocomplete="off">
@@ -132,7 +160,7 @@
     <footer><div class="footer-bottom"><span>Australia</span><span>Privacy & Terms</span></div></footer>
 
     <script>
-        // --- DATA PORTED FROM AMA.HTML ---
+        // --- CHAT LOGIC ---
         const amaDatabase = [
             { keywords: ["hubstaff"], url: "https://hubstaff.com/", title: "Hubstaff", desc: "Work management platform." },
             { keywords: ["university", "lava university"], url: "https://university.lavaautomation.com", title: "Lava University", desc: "Training platform." },
@@ -178,7 +206,7 @@
 
         document.getElementById('widget-input').onkeypress = (e) => { if(e.key === 'Enter') handleWidgetSubmit(); };
 
-        // --- ORIGINAL SEARCH LOGIC ---
+        // --- SEARCH LOGIC ---
         const database = [
             { type: "all", keywords: ["hubstaff", "time tracking"], url: "https://hubstaff.com/", title: "Hubstaff - Time Tracking", description: "The all-in-one work management platform." },
             { type: "all", keywords: ["lava university", "learn"], url: "https://university.lavaautomation.com", title: "Lava University", description: "Official training platform." },
@@ -191,8 +219,6 @@
         const buttonRow = document.getElementById('button-row');
         const searchTabs = document.getElementById('search-tabs');
         const suggestionsList = document.getElementById('suggestions-list');
-
-        let currentTab = 'all';
 
         searchInput.addEventListener('input', () => {
             const query = searchInput.value.toLowerCase().trim();
@@ -236,10 +262,19 @@
         document.getElementById('search-btn').onclick = performSearch;
         searchInput.onkeypress = (e) => { if (e.key === 'Enter') performSearch(); };
 
+        // --- THEME SYNC ---
         const themeIcon = document.getElementById('theme-icon');
         function setTheme(t) {
             document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t);
             themeIcon.innerHTML = t === 'dark' ? '<path d="M12 7a5 5 0 1 1-4.992 5.002A5 5 0 0 1 12 7.002zM11 1h2v3h-2V1z"/>' : '<path d="M12 3c.132 0 .263 0 .393.007a9 9 0 0 0 7.5 13.5A9 9 0 1 1 12 3z"/>';
+            
+            // Sync logo filter for dark mode
+            const mainLogo = document.getElementById('main-logo');
+            if (t === 'dark') {
+                mainLogo.style.filter = 'brightness(0) invert(1)';
+            } else {
+                mainLogo.style.filter = 'none';
+            }
         }
         setTheme(localStorage.getItem('theme') || 'light');
         document.getElementById('theme-toggle').onclick = () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
